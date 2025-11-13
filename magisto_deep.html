@@ -1,135 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Magisto Deep Link Test</title>
+    <title>Magisto Deep Links</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; }
-        .section { margin: 20px 0; padding: 15px; border-radius: 8px; }
-        .hijack { background: #ffebee; border-left: 4px solid #f44336; }
-        .legit { background: #e8f5e8; border-left: 4px solid #4caf50; }
-        button { background: #080844; color: white; padding: 10px 15px; border: none; border-radius: 4px; margin: 5px; cursor: pointer; }
-        button:hover { background: #0d0d5e; }
-        .note { font-size: 12px; color: #666; margin-top: 5px; }
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; }
+        .path { 
+            background: #080844; 
+            color: white; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border-radius: 6px; 
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .path:hover { background: #0d0d5e; }
+        .hijacked { border-left: 4px solid #f44336; }
+        .legitimate { border-left: 4px solid #4caf50; }
+        .category { margin: 25px 0 10px 0; color: #333; }
     </style>
 </head>
 <body>
-    <h1>🔗 Magisto Deep Link Test</h1>
-    <p>This page tests which app opens for different Magisto deep links.</p>
+    <h2>🔗 Magisto Deep Links</h2>
 
-    <!-- 🚨 HIJACKED PATHS (Not in real app manifest) -->
-    <div class="section hijack">
-        <h2>🚨 HIJACKED PATHS</h2>
-        <p>These will open <strong>ONLY your POC app</strong> (no chooser):</p>
-        
-        <button onclick="openDeepLink('magisto://www.magisto.com/account/login?email=test@example.com')">
-            🔓 Login Page
-        </button>
-        <div class="note">Path: /account/login (NOT in real app)</div>
+    <div class="category" style="color: #f44336;">🚨 Hijacked Paths</div>
+    <div class="path hijacked" onclick="openLink('magisto://www.magisto.com/account/login?email=test@example.com')">🔓 /account/login</div>
+    <div class="path hijacked" onclick="openLink('magisto://www.magisto.com/reset/password?token=abc123xyz')">🔑 /reset/password</div>
+    <div class="path hijacked" onclick="openLink('magisto://www.magisto.com/payment/confirm?amount=49.99')">💳 /payment/confirm</div>
+    <div class="path hijacked" onclick="openLink('magisto://www.magisto.com/verify/email?code=6D8F2A')">✉️ /verify/email</div>
 
-        <button onclick="openDeepLink('magisto://www.magisto.com/reset/password?token=abc123xyz&user_id=789')">
-            🔑 Reset Password
-        </button>
-        <div class="note">Path: /reset/password (NOT in real app) - Token: abc123xyz</div>
-
-        <button onclick="openDeepLink('magisto://www.magisto.com/payment/confirm?amount=49.99&plan=premium')">
-            💳 Payment Confirm
-        </button>
-        <div class="note">Path: /payment/confirm (NOT in real app)</div>
-
-        <button onclick="openDeepLink('magisto://www.magisto.com/verify/email?code=6D8F2A')">
-            ✉️ Verify Email
-        </button>
-        <div class="note">Path: /verify/email (NOT in real app)</div>
-    </div>
-
-    <!-- ✅ LEGITIMATE PATHS (In real app manifest) -->
-    <div class="section legit">
-        <h2>✅ LEGITIMATE PATHS</h2>
-        <p>These will show <strong>app chooser</strong> (both apps):</p>
-        
-        <button onclick="openDeepLink('magisto://www.magisto.com/account/premium?feature=4k')">
-            ⭐ Premium Upgrade
-        </button>
-        <div class="note">Path: /account/premium (IN real app)</div>
-
-        <button onclick="openDeepLink('magisto://www.magisto.com/account/settings?section=privacy')">
-            ⚙️ Account Settings
-        </button>
-        <div class="note">Path: /account/settings (IN real app)</div>
-
-        <button onclick="openDeepLink('magisto://www.magisto.com/subscription?action=renew')">
-            🔄 Subscription
-        </button>
-        <div class="note">Path: /subscription (IN real app)</div>
-
-        <button onclick="openDeepLink('magisto://www.magisto.com/video/template?id=summer2024')">
-            🎬 Video Template
-        </button>
-        <div class="note">Path: /video/template (IN real app)</div>
-    </div>
-
-    <!-- 📊 TEST ALL BUTTON -->
-    <div style="text-align: center; margin-top: 30px;">
-        <button onclick="testAllLinks()" style="background: #ff9800;">
-            🧪 Test All Links
-        </button>
-    </div>
+    <div class="category" style="color: #4caf50;">✅ Legitimate Paths</div>
+    <div class="path legitimate" onclick="openLink('magisto://www.magisto.com/account/premium?feature=4k')">⭐ /account/premium</div>
+    <div class="path legitimate" onclick="openLink('magisto://www.magisto.com/account/settings?section=privacy')">⚙️ /account/settings</div>
+    <div class="path legitimate" onclick="openLink('magisto://www.magisto.com/subscription?action=renew')">🔄 /subscription</div>
+    <div class="path legitimate" onclick="openLink('magisto://www.magisto.com/video/template?id=summer2024')">🎬 /video/template</div>
 
     <script>
-        function openDeepLink(url) {
-            console.log('Opening:', url);
-            
-            // Try to open the deep link
-            window.location.href = url;
-            
-            // Fallback: If app not installed, show message after delay
-            setTimeout(function() {
-                if (!document.hidden) {
-                    alert('App may not be installed or failed to open.\nURL: ' + url);
-                }
-            }, 1000);
-        }
-
-        function testAllLinks() {
-            const hijackedLinks = [
-                'magisto://www.magisto.com/account/login?email=test@example.com',
-                'magisto://www.magisto.com/reset/password?token=abc123xyz',
-                'magisto://www.magisto.com/payment/confirm?amount=49.99',
-                'magisto://www.magisto.com/verify/email?code=6D8F2A'
-            ];
-
-            const legitLinks = [
-                'magisto://www.magisto.com/account/premium?feature=4k',
-                'magisto://www.magisto.com/account/settings?section=privacy',
-                'magisto://www.magisto.com/subscription?action=renew',
-                'magisto://www.magisto.com/video/template?id=summer2024'
-            ];
-
-            alert('Testing 4 hijacked links (should open POC directly) and 4 legitimate links (should show chooser)');
-            
-            // Test hijacked links first
-            hijackedLinks.forEach((link, index) => {
-                setTimeout(() => {
-                    console.log('Testing hijacked link:', link);
-                    window.location.href = link;
-                }, index * 3000);
-            });
-
-            // Test legitimate links after
+        function openLink(url) {
+            // Visual feedback
+            event.target.style.opacity = '0.7';
             setTimeout(() => {
-                legitLinks.forEach((link, index) => {
-                    setTimeout(() => {
-                        console.log('Testing legitimate link:', link);
-                        window.location.href = link;
-                    }, index * 3000);
-                });
-            }, hijackedLinks.length * 3000 + 2000);
-        }
-
-        // Auto-detect if we're in WebView and send links back to app
-        if (window.Android) {
-            // If in Android WebView, you can communicate back to the app
-            console.log('Running in Android WebView');
+                event.target.style.opacity = '1';
+            }, 200);
+            
+            // Open deep link silently
+            window.location.href = url;
         }
     </script>
 </body>
