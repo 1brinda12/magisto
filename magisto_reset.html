@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magisto Password Reset - Security Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #e51075;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        .alert.warning {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .reset-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .reset-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .reset-card p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+        
+        .btn-primary {
+            background: #e51075;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #c40e63;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+            transform: translateY(-2px);
+        }
+        
+        .test-section {
+            border-top: 2px dashed #dee2e6;
+            padding-top: 25px;
+            margin-top: 25px;
+        }
+        
+        .test-section h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .url-display {
+            background: #e9ecef;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+        
+        .description {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 20px;
+            line-height: 1.4;
+        }
+        
+        .vulnerability-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        
+        .vulnerability-info h5 {
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>Magisto</h1>
+        </div>
+        
+        <div class="alert">
+            🔒 This is a security demonstration page showing Magisto deep link vulnerabilities
+        </div>
+        
+        <div class="reset-card">
+            <h3>Password Reset Required</h3>
+            <p>We've detected unusual activity on your account. For your security, please reset your password immediately.</p>
+            
+            <!-- Attack Vector 1: HTTPS Link (Shows App Chooser) -->
+            <a href="https://www.magisto.com/reset/3l1pa5-70a-6bbd6a553d47c1b7955c" class="btn btn-primary" id="httpsLink">
+                🔓 Reset Password via HTTPS
+            </a>
+            
+            <!-- Attack Vector 2: Custom Scheme (Direct Hijack) -->
+            <a href="magisto://www.magisto.com/reset/3l1pa5-70a-6bbd6a553d47c1b7955c" class="btn btn-secondary" id="customLink">
+                🚨 Reset Password via Deep Link
+            </a>
+        </div>
+        
+        <div class="test-section">
+            <h4>🔍 Test Links for Security Research</h4>
+            
+            <div class="url-display">
+                <strong>HTTPS Link (Shows Chooser):</strong><br>
+                https://www.magisto.com/reset/3l1pa5-70a-6bbd6a553d47c1b7955c
+            </div>
+            
+            <div class="url-display">
+                <strong>Custom Scheme (Direct Hijack):</strong><br>
+                magisto://www.magisto.com/reset/3l1pa5-70a-6bbd6a553d47c1b7955c
+            </div>
+            
+            <button onclick="testBothLinks()" class="btn" style="background: #17a2b8; color: white;">
+                🧪 Test Both Links Automatically
+            </button>
+        </div>
+        
+        <div class="vulnerability-info">
+            <h5>📋 Vulnerability Demonstration</h5>
+            <p><strong>HTTPS Link:</strong> Shows app chooser - malicious apps appear alongside legitimate browsers</p>
+            <p><strong>Custom Scheme:</strong> Opens directly in malicious app - no user warning or choice</p>
+            <p><strong>Impact:</strong> Attackers can intercept password reset tokens and take over accounts</p>
+        </div>
+        
+        <div class="description">
+            <p><strong>Note:</strong> This page demonstrates a security vulnerability in Magisto's Android app. The reset token shown is from an actual Magisto password reset email.</p>
+            <p><strong>Expected Behavior:</strong> HTTPS links should open only in Magisto app. Custom scheme links should be protected by path verification.</p>
+            <p><strong>Actual Behavior:</strong> Any app can intercept these links due to missing security controls.</p>
+        </div>
+    </div>
+
+    <script>
+        function testBothLinks() {
+            // Test HTTPS link first (shows chooser)
+            setTimeout(() => {
+                window.location.href = "https://www.magisto.com/reset/3l1pa5-70a-6bbd6a553d47c1b7955c";
+            }, 1000);
+            
+            // If user returns, test custom scheme after delay
+            setTimeout(() => {
+                if (confirm('Now testing custom scheme hijacking. This will open directly in the malicious app without any warnings. Continue?')) {
+                    window.location.href = "magisto://www.magisto.com/reset/3l1pa5-70a-6bbd6a553d47c1b7955c";
+                }
+            }, 3000);
+        }
+        
+        // Add click tracking for analytics
+        document.getElementById('httpsLink').addEventListener('click', function() {
+            console.log('HTTPS link clicked - should show app chooser');
+        });
+        
+        document.getElementById('customLink').addEventListener('click', function() {
+            console.log('Custom scheme link clicked - should open directly in malicious app');
+        });
+        
+        // Show user agent info
+        console.log('User Agent:', navigator.userAgent);
+        console.log('Platform:', navigator.platform);
+    </script>
+</body>
+</html>
